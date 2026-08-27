@@ -1,6 +1,6 @@
 # LazyStick 巴法云远程控制页
 
-在线地址：<https://hao0527.github.io/LazyStick-Remote/>
+在线地址：<https://blog.ihcode.cn/LazyStick-Remote/>
 
 直接双击 `index.html`，使用现代版 Chrome、Edge、Firefox 或 Safari 打开即可。不需要安装软件、启动本地服务器，也不要求电脑或手机与 LazyStick 位于同一局域网。
 
