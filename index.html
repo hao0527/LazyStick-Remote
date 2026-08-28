@@ -4,6 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#070b14">
+  <meta name="description" content="通过巴法云远程控制 LazyStick，并查看设备 MQTT 在线状态。">
+  <link rel="canonical" href="https://lazystick.icu/">
   <title>LazyStick 远程控制</title>
   <style>
     :root{color-scheme:dark;--bg:#070b14;--card:#111827;--surface:#172033;--text:#f8fafc;--muted:#94a3b8;
@@ -22,14 +24,17 @@
       padding:10px 12px;cursor:pointer;box-shadow:0 10px 30px var(--shadow)}.icon-button{width:43px;padding:10px 0}
     .status-row{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:2px 0 15px;padding:13px 15px;
       border:1px solid var(--line);border-radius:14px;background:var(--card);box-shadow:0 12px 32px var(--shadow)}
-    .status-main{display:flex;align-items:center;gap:10px;min-width:0}.dot{width:9px;height:9px;border-radius:50%;background:var(--muted);
+    .status-main{display:flex;flex:1;align-items:flex-start;gap:10px;min-width:0}.status-text{min-width:0}.status-detail{margin-top:3px;
+      color:var(--muted);font-size:11px;line-height:1.5}.dot{flex:0 0 9px;width:9px;height:9px;margin-top:5px;border-radius:50%;background:var(--muted);
       box-shadow:0 0 0 5px color-mix(in srgb,var(--muted) 16%,transparent)}.dot.ready{background:var(--ok)}
     .dot.busy{background:var(--warn)}.dot.error{background:var(--danger)}#status{font-size:14px;overflow-wrap:anywhere}
-    .endpoint{color:var(--muted);font-size:11px;white-space:nowrap}.settings{margin:0 0 15px;padding:20px;border:1px solid var(--line);
+    .status-tools{display:flex;align-items:center;gap:10px}.endpoint{color:var(--muted);font-size:11px;white-space:nowrap}.refresh-status{
+      border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--text);font:inherit;font-size:12px;font-weight:750;
+      padding:7px 10px;cursor:pointer}.refresh-status:disabled{opacity:.55;cursor:wait}.settings{margin:0 0 15px;padding:20px;border:1px solid var(--line);
       border-radius:18px;background:var(--card);box-shadow:0 15px 40px var(--shadow)}.settings-head{display:flex;justify-content:space-between;
       gap:12px;align-items:flex-start;margin-bottom:16px}.settings h2,.group h2{margin:0;font-size:19px}.settings-head p,.group-head p{
       margin:4px 0 0;color:var(--muted);font-size:13px;line-height:1.55}.form-grid{display:grid;grid-template-columns:1fr 1fr;
-      gap:13px}.field label{display:block;margin-bottom:7px;font-size:13px;font-weight:750}.input-wrap{position:relative}input{
+      gap:13px}.field,.input-wrap{min-width:0}.field label{display:block;margin-bottom:7px;font-size:13px;font-weight:750}.input-wrap{position:relative}input{
       display:block;width:100%;border:1px solid var(--line);border-radius:11px;background:var(--surface);color:var(--text);
       font:inherit;padding:12px 13px;outline:none}input:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent)}
     .reveal{position:absolute;right:7px;top:50%;transform:translateY(-50%);border:0;border-radius:8px;background:var(--soft);
@@ -51,7 +56,7 @@
       border:1px solid var(--line);border-radius:13px;background:var(--card);color:var(--text);box-shadow:0 22px 70px var(--shadow);
       transition:.2s}.toast.show{opacity:1;transform:translate(-50%,0)}.toast.error{border-color:var(--danger);color:var(--danger)}
     @media(max-width:600px){.shell{padding:18px 12px 66px}.hero{display:block}.hero-tools{justify-content:flex-start;margin-top:15px}
-      .endpoint{display:none}.settings,.group{padding:17px 14px;border-radius:16px}.form-grid{grid-template-columns:1fr}.grid{grid-template-columns:1fr}
+      .endpoint{display:none}.status-row{align-items:stretch;flex-direction:column}.status-tools{justify-content:flex-end}.settings,.group{padding:17px 14px;border-radius:16px}.form-grid{grid-template-columns:1fr}.grid{grid-template-columns:1fr}
       .action{min-height:62px}}@media(prefers-reduced-motion:reduce){*{transition:none!important}}
   </style>
 </head>
@@ -67,22 +72,23 @@
     </header>
 
     <div class="status-row" aria-live="polite">
-      <div class="status-main"><span id="status-dot" class="dot"></span><span id="status">尚未配置巴法云</span></div>
-      <span class="endpoint">HTTPS → MQTT</span>
+      <div class="status-main"><span id="status-dot" class="dot"></span><div class="status-text"><div id="status">尚未配置巴法云</div>
+        <div id="status-detail" class="status-detail">保存配置后自动检查设备状态</div></div></div>
+      <div class="status-tools"><span class="endpoint">巴法云设备状态</span><button id="refresh-status" class="refresh-status" type="button" disabled>刷新</button></div>
     </div>
 
     <section id="settings" class="settings" aria-labelledby="settings-title">
       <div class="settings-head"><div><h2 id="settings-title">巴法云配置</h2>
-        <p>填写 LazyStick 当前订阅的 MQTT 主题和同一账号的用户私钥。</p></div></div>
+        <p>与 LazyStick 设置页中的巴法云配置保持一致。</p></div></div>
       <form id="config-form">
         <div class="form-grid">
-          <div class="field"><label for="topic">MQTT 主题</label><input id="topic" name="topic" type="text" required
-            maxlength="64" pattern="[A-Za-z0-9]+" autocomplete="off" spellcheck="false" placeholder="例如 lazystick005"></div>
-          <div class="field"><label for="uid">用户私钥（UID）</label><div class="input-wrap"><input id="uid" name="uid"
-            type="password" required maxlength="64" pattern="[A-Za-z0-9]+" autocomplete="off" spellcheck="false" placeholder="巴法云控制台中的私钥">
+          <div class="field"><label for="uid">巴法云 Private Key</label><div class="input-wrap"><input id="uid" name="uid"
+            type="password" required maxlength="64" pattern="[A-Za-z0-9]+" autocomplete="off" spellcheck="false" placeholder="与 LazyStick 设置页保持一致">
             <button id="reveal" class="reveal" type="button">显示</button></div></div>
+          <div class="field"><label for="topic">巴法云主题</label><input id="topic" name="topic" type="text" required
+            maxlength="64" pattern="[A-Za-z0-9]+" autocomplete="off" spellcheck="false" placeholder="例如 lazystick005"></div>
         </div>
-        <p class="config-note">配置只保存在当前浏览器的本地存储中。请勿在公共或共享设备上保存私钥。</p>
+        <p class="config-note">配置保存在 lazystick.icu 当前浏览器的本地存储中，关闭页面或浏览器后仍会保留；清除浏览器网站数据、使用无痕模式或更换浏览器后不会保留。请勿在公共设备上保存私钥。</p>
         <div class="form-actions"><button id="clear-config" class="secondary" type="button">清除</button>
           <button class="primary" type="submit">保存配置</button></div>
       </form>
@@ -113,9 +119,9 @@
       <button class="action" type="button" data-label="宏 6" data-payloads="on#7|on#x#xx#5">宏 6</button>
     </div></section>
 
-    <aside class="privacy"><strong>工作方式：</strong>此页面直接向巴法云官方 HTTPS 接口提交消息，由巴法云发布到 MQTT 主题；
-      不会连接 LazyStick 的局域网地址，也不会占用或挤掉设备的 MQTT 长连接。接口返回成功只表示巴法云接受了消息，
-      不代表电脑已经执行完成。</aside>
+    <aside class="privacy"><strong>工作方式：</strong>此页面通过巴法云官方 HTTPS 接口发送指令并查询主题订阅状态，
+      不会连接 LazyStick 的局域网地址，也不会占用或挤掉设备的 MQTT 长连接。“设备在线”表示该主题存在在线订阅；
+      “发送成功”只表示巴法云接受了消息，不代表电脑已经执行完成。</aside>
   </main>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
@@ -123,32 +129,37 @@
     (()=>{
       'use strict';
       const API='https://apis.bemfa.com/va/postJsonMsg';
+      const ONLINE_API='https://apis.bemfa.com/va/online';
       const STORAGE_KEY='lazystick.bemfa.remote.v1';
       const THEME_KEY='lazystick.remote.theme';
       const form=document.getElementById('config-form');
       const settings=document.getElementById('settings');
       const settingsToggle=document.getElementById('settings-toggle');
       const status=document.getElementById('status');
+      const statusDetail=document.getElementById('status-detail');
       const statusDot=document.getElementById('status-dot');
+      const refreshStatus=document.getElementById('refresh-status');
       const toast=document.getElementById('toast');
       const actionButtons=[...document.querySelectorAll('.action')];
       let config={uid:'',topic:''};
       let busy=false;
       let toastTimer=0;
+      let statusRequest=null;
 
       function storageGet(key){try{return localStorage.getItem(key)}catch{return null}}
       function storageSet(key,value){try{localStorage.setItem(key,value);return true}catch{return false}}
       function storageRemove(key){try{localStorage.removeItem(key)}catch{}}
       function isValid(value){return /^[A-Za-z0-9]+$/.test(value)}
       function configured(){return isValid(config.uid)&&isValid(config.topic)}
-      function setStatus(message,tone=''){
-        status.textContent=message;statusDot.className='dot'+(tone?' '+tone:'');
+      function setStatus(message,tone='',detail=''){
+        status.textContent=message;statusDetail.textContent=detail;statusDot.className='dot'+(tone?' '+tone:'');
       }
       function showToast(message,isError=false){
         clearTimeout(toastTimer);toast.textContent=message;toast.className='toast show'+(isError?' error':'');
         toastTimer=setTimeout(()=>toast.className='toast',3600);
       }
-      function setBusy(value){busy=value;actionButtons.forEach(button=>button.disabled=value||!configured())}
+      function setBusy(value){busy=value;actionButtons.forEach(button=>button.disabled=value||!configured());
+        refreshStatus.disabled=value||!configured()||statusRequest!==null}
       function setSettingsVisible(visible){settings.hidden=!visible;settingsToggle.setAttribute('aria-expanded',String(visible));
         settingsToggle.textContent=visible?'收起配置':'巴法云配置'}
       function applyTheme(theme){
@@ -159,9 +170,28 @@
       function loadConfig(){
         try{const saved=JSON.parse(storageGet(STORAGE_KEY)||'{}');config={uid:saved.uid||'',topic:saved.topic||''}}catch{config={uid:'',topic:''}}
         form.elements.uid.value=config.uid;form.elements.topic.value=config.topic;
-        if(configured()){setStatus('已配置 · '+config.topic,'ready');setSettingsVisible(false)}
-        else{setStatus('尚未配置巴法云');setSettingsVisible(true)}
+        refreshStatus.disabled=!configured();
+        if(configured()){setStatus('正在检查设备状态','busy','主题：'+config.topic);setSettingsVisible(false);checkOnline()}
+        else{setStatus('尚未配置巴法云','','保存配置后自动检查设备状态');setSettingsVisible(true)}
         setBusy(false);
+      }
+      function checkedAt(){return new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'})}
+      async function checkOnline(silent=false){
+        if(!configured()||busy)return;if(statusRequest)statusRequest.abort();const controller=new AbortController();statusRequest=controller;
+        refreshStatus.disabled=true;const timeout=setTimeout(()=>controller.abort(),8000);
+        if(!silent)setStatus('正在检查设备状态','busy','主题：'+config.topic);
+        try{
+          const url=new URL(ONLINE_API);url.search=new URLSearchParams({uid:config.uid,topic:config.topic,type:'1'});
+          const response=await fetch(url,{cache:'no-store',signal:controller.signal});const result=await response.json().catch(()=>null);
+          if(!response.ok||!result||result.code!==0||typeof result.data!=='boolean')throw new Error(result?.message||('HTTP '+response.status));
+          if(statusRequest!==controller)return;
+          if(result.data)setStatus('LazyStick 在线','ready','MQTT 主题已订阅 · '+checkedAt());
+          else setStatus('LazyStick 离线','error','未检测到该主题的在线订阅 · '+checkedAt());
+        }catch(error){
+          if(statusRequest!==controller)return;
+          if(error.name!=='AbortError')setStatus('设备状态未知','error','查询失败：'+error.message);
+          else setStatus('设备状态未知','error','查询超时，请检查网络');
+        }finally{clearTimeout(timeout);if(statusRequest===controller){statusRequest=null;refreshStatus.disabled=!configured()}}
       }
       async function publish(payload){
         const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),8000);
@@ -175,13 +205,15 @@
       async function sendAction(button){
         if(busy)return;if(!configured()){setSettingsVisible(true);form.elements.topic.focus();showToast('请先保存巴法云配置',true);return}
         const warning=button.dataset.confirm;if(warning&&!confirm(warning))return;
-        const payloads=button.dataset.payloads.split('|');setBusy(true);setStatus('正在发送 · '+button.dataset.label,'busy');
+        if(statusRequest){statusRequest.abort();statusRequest=null}
+        const payloads=button.dataset.payloads.split('|');setBusy(true);setStatus('正在发送 · '+button.dataset.label,'busy','通过巴法云 HTTPS 接口提交');
         try{
           for(let index=0;index<payloads.length;index++){
             await publish(payloads[index]);
             if(index+1<payloads.length)await new Promise(resolve=>setTimeout(resolve,350));
           }
-          setStatus('发送成功 · '+button.dataset.label,'ready');showToast('已通过巴法云发送：'+button.dataset.label);
+          setStatus('发送成功 · '+button.dataset.label,'ready','巴法云已接受消息，正在刷新设备状态');showToast('已通过巴法云发送：'+button.dataset.label);
+          setTimeout(checkOnline,1200);
         }catch(error){
           const message=error.name==='AbortError'?'请求超时，请检查网络':'发送失败：'+error.message;
           setStatus(message,'error');showToast(message,true);
@@ -189,6 +221,7 @@
       }
 
       settingsToggle.addEventListener('click',()=>setSettingsVisible(settings.hidden));
+      refreshStatus.addEventListener('click',checkOnline);
       document.getElementById('theme-toggle').addEventListener('click',()=>{
         const next=document.documentElement.dataset.theme==='dark'?'light':'dark';applyTheme(next);storageSet(THEME_KEY,next);
       });
@@ -198,16 +231,20 @@
       document.getElementById('clear-config').addEventListener('click',()=>{
         const hasValue=config.uid||config.topic||form.elements.uid.value||form.elements.topic.value;
         if(!hasValue)return;if(!confirm('确定清除当前浏览器保存的巴法云主题和私钥吗？'))return;
-        config={uid:'',topic:''};storageRemove(STORAGE_KEY);form.reset();setStatus('尚未配置巴法云');setSettingsVisible(true);setBusy(false);showToast('本地配置已清除');
+        if(statusRequest){statusRequest.abort();statusRequest=null}
+        config={uid:'',topic:''};storageRemove(STORAGE_KEY);form.reset();refreshStatus.disabled=true;
+        setStatus('尚未配置巴法云','','保存配置后自动检查设备状态');setSettingsVisible(true);setBusy(false);showToast('本地配置已清除');
       });
       form.addEventListener('submit',event=>{
         event.preventDefault();const uid=form.elements.uid.value.trim();const topic=form.elements.topic.value.trim();
         if(!isValid(uid)||!isValid(topic)){showToast('主题和私钥只能包含英文字母与数字',true);return}
+        if(statusRequest){statusRequest.abort();statusRequest=null}
         config={uid,topic};if(!storageSet(STORAGE_KEY,JSON.stringify(config)))showToast('浏览器禁止本地存储，本次打开期间仍可使用',true);
-        setStatus('已配置 · '+topic,'ready');setSettingsVisible(false);setBusy(false);showToast('巴法云配置已保存');
+        refreshStatus.disabled=false;setStatus('正在检查设备状态','busy','主题：'+topic);setSettingsVisible(false);setBusy(false);
+        showToast('巴法云配置已保存');checkOnline();
       });
       actionButtons.forEach(button=>button.addEventListener('click',()=>sendAction(button)));
-      applyTheme(storageGet(THEME_KEY)||'dark');loadConfig();
+      applyTheme(storageGet(THEME_KEY)||'dark');loadConfig();setInterval(()=>{if(configured()&&!busy)checkOnline(true)},30000);
     })();
   </script>
 </body>

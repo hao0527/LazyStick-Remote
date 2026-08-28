@@ -1,19 +1,21 @@
 # LazyStick 巴法云远程控制页
 
-在线地址：<https://blog.ihcode.cn/LazyStick-Remote/>
+在线地址：<https://lazystick.icu/>
 
 直接双击 `index.html`，使用现代版 Chrome、Edge、Firefox 或 Safari 打开即可。不需要安装软件、启动本地服务器，也不要求电脑或手机与 LazyStick 位于同一局域网。
 
 首次打开时填写：
 
-- 巴法云用户私钥（UID）；
-- LazyStick 固件中配置的同一个 MQTT 主题，通常以 `005` 结尾。
+- `巴法云 Private Key`；
+- `巴法云主题`，通常以 `005` 结尾。
 
-配置保存在当前浏览器的 `localStorage` 中，不会写入 LazyStick，也不会发送给巴法云以外的服务。不要在公共或共享设备上保存私钥；可以随时点击“清除”删除本地配置。
+字段名称与 LazyStick 设置页保持一致。配置保存在 `lazystick.icu` 在当前浏览器中的 `localStorage`，关闭页面或浏览器后仍会保留；清除该网站的数据、使用无痕模式或更换浏览器/设备后不会保留。旧域名保存的数据不会自动迁移到新域名。配置不会写入 LazyStick，也不会发送给巴法云以外的服务。不要在公共或共享设备上保存私钥；可以随时点击“清除”删除本地配置。
 
 ## 工作方式
 
 页面调用巴法云官方 HTTPS 消息接口 `https://apis.bemfa.com/va/postJsonMsg`，以 `type=1` 向 MQTT 主题发布 LazyStick 指令。这样不会使用与 LazyStick 相同的 MQTT Client ID，也不会导致设备的 MQTT 长连接被重复登录挤下线。
+
+页面每 30 秒调用巴法云官方在线查询接口，并支持手动刷新。显示“LazyStick 在线”表示配置的 MQTT 主题至少存在一个在线订阅；显示“离线”表示巴法云没有检测到在线订阅。它可以反映 LazyStick 的 MQTT 连接状态，但无法证明电脑已经执行了上一条指令。若多个设备订阅同一主题，在线状态代表这些订阅中的整体状态，无法区分具体设备。
 
 电脑操作发送单条指令；媒体和宏操作依次发送模式与风速两条指令，间隔 350 ms，满足 LazyStick 的 10 秒组合窗口：
 
