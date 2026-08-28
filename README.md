@@ -2,7 +2,7 @@
 
 在线地址：<https://lazystick.icu/>
 
-直接双击 `index.html`，使用现代版 Chrome、Edge、Firefox 或 Safari 打开即可。不需要安装软件、启动本地服务器，也不要求电脑或手机与 LazyStick 位于同一局域网。
+直接双击 `index.html`，使用现代版 Chrome、Edge、Firefox 或 Safari 打开即可。不需要安装软件或启动本地服务器，也不要求与 LazyStick 位于同一局域网。
 
 首次打开时填写：
 
@@ -36,3 +36,13 @@
 ## 浏览器要求
 
 页面需要联网并支持 `fetch`、`localStorage`、`AbortController` 和现代 JavaScript 语法的浏览器。如果浏览器或安全软件禁止本地文件访问网络，请使用另一款现代浏览器打开，或将整个文件夹部署到任意静态 HTTPS 网站。
+
+## 上传发布
+
+在仓库根目录执行：
+
+```powershell
+.\scripts\upload.ps1 -Message "更新远程控制页面"
+```
+
+也可以运行 `scripts\upload.cmd`。脚本会检查仓库状态，提交当前仓库的改动并推送到 `origin` 的当前分支；GitHub Pages 随后会自动更新。可用 `-Remote`、`-Branch` 指定其他远端或分支，用 `-WhatIf` 仅查看计划操作。
