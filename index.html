@@ -22,6 +22,14 @@
     .hero-tools{display:flex;gap:7px;align-items:center;flex-wrap:wrap;justify-content:flex-end}.icon-button,.settings-button{
       border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--accent);font:inherit;font-size:12px;
       font-weight:700;padding:7px 10px;cursor:pointer}.icon-button:hover,.settings-button:hover{border-color:var(--accent)}
+    .device-switcher{display:flex;align-items:center;gap:10px;margin:2px 0 10px;padding:11px 13px;border:1px solid var(--line);
+      border-radius:14px;background:var(--card);box-shadow:0 12px 32px var(--shadow)}.device-picker{display:flex;align-items:center;
+      gap:10px;flex:1;min-width:0;color:var(--muted);font-size:12px;font-weight:750}.device-picker span{white-space:nowrap}.device-picker select{
+      min-width:0;flex:1;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--text);font:inherit;
+      font-size:13px;font-weight:700;padding:8px 32px 8px 10px;outline:none}.device-picker select:focus{border-color:var(--accent);
+      box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent)}.add-device{white-space:nowrap;border:1px solid var(--accent);
+      border-radius:10px;background:var(--surface);color:var(--accent);font:inherit;font-size:12px;font-weight:750;padding:8px 11px;cursor:pointer}
+    .add-device:disabled{opacity:.5;cursor:not-allowed}
     .status-row{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:2px 0 15px;padding:13px 15px;
       border:1px solid var(--line);border-radius:14px;background:var(--card);box-shadow:0 12px 32px var(--shadow)}
     .status-main{display:flex;flex:1;align-items:flex-start;gap:10px;min-width:0}.status-text{min-width:0}.status-detail{margin-top:3px;
@@ -33,7 +41,7 @@
       padding:7px 10px;cursor:pointer}.refresh-status:disabled{opacity:.55;cursor:wait}.settings{margin:0 0 15px;padding:20px;border:1px solid var(--line);
       border-radius:18px;background:var(--card);box-shadow:0 15px 40px var(--shadow)}.settings-head{display:flex;justify-content:space-between;
       gap:12px;align-items:flex-start;margin-bottom:16px}.settings h2,.group h2{margin:0;font-size:19px}.settings-head p,.group-head p{
-      margin:4px 0 0;color:var(--muted);font-size:13px;line-height:1.55}.form-grid{display:grid;grid-template-columns:1fr 1fr;
+      margin:4px 0 0;color:var(--muted);font-size:13px;line-height:1.55}.form-grid{display:grid;grid-template-columns:minmax(140px,.72fr) 1fr 1fr;
       gap:13px}.field,.input-wrap{min-width:0}.field label{display:block;margin-bottom:7px;font-size:13px;font-weight:750}.input-wrap{position:relative}input{
       display:block;width:100%;border:1px solid var(--line);border-radius:11px;background:var(--surface);color:var(--text);
       font:inherit;padding:12px 13px;outline:none}input:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent)}
@@ -56,7 +64,7 @@
       border:1px solid var(--line);border-radius:13px;background:var(--card);color:var(--text);box-shadow:0 22px 70px var(--shadow);
       transition:.2s}.toast.show{opacity:1;transform:translate(-50%,0)}.toast.error{border-color:var(--danger);color:var(--danger)}
     @media(max-width:600px){.shell{padding:18px 12px 66px}.hero{display:block}.hero-tools{justify-content:flex-start;margin-top:15px}
-      .endpoint{display:none}.status-row{align-items:stretch;flex-direction:column}.status-tools{justify-content:flex-end}.settings,.group{padding:17px 14px;border-radius:16px}.form-grid{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .device-switcher{align-items:stretch}.device-picker{align-items:stretch;flex-direction:column;gap:6px}.endpoint{display:none}.status-row{align-items:stretch;flex-direction:column}.status-tools{justify-content:flex-end}.settings,.group{padding:17px 14px;border-radius:16px}.form-grid{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}
       .action{min-height:68px;padding:11px}}@media(prefers-reduced-motion:reduce){*{transition:none!important}}
   </style>
 </head>
@@ -66,10 +74,15 @@
       <div><span class="eyebrow">BEMFA REMOTE</span><h1>LazyStick 远程控制</h1>
         <p class="subtitle">通过巴法云控制设备，不要求手机与 LazyStick 位于同一局域网。</p></div>
       <div class="hero-tools">
-        <button id="theme-toggle" class="icon-button" type="button" aria-label="切换明暗主题">☀ 切换明色</button>
         <button id="settings-toggle" class="settings-button" type="button" aria-expanded="false">巴法云配置</button>
+        <button id="theme-toggle" class="icon-button" type="button" aria-label="切换明暗主题">☀ 切换明色</button>
       </div>
     </header>
+
+    <div class="device-switcher">
+      <label class="device-picker" for="device-select"><span>控制设备</span><select id="device-select" aria-label="控制设备"></select></label>
+      <button id="new-device" class="add-device" type="button">新增设备</button>
+    </div>
 
     <div class="status-row" aria-live="polite">
       <div class="status-main"><span id="status-dot" class="dot"></span><div class="status-text"><div id="status">尚未配置巴法云</div>
@@ -79,18 +92,20 @@
 
     <section id="settings" class="settings" aria-labelledby="settings-title">
       <div class="settings-head"><div><h2 id="settings-title">巴法云配置</h2>
-        <p>与 LazyStick 设置页中的巴法云配置保持一致。</p></div></div>
+        <p>每台设备保存独立的名称、Private Key 和主题，最多 8 台。</p></div></div>
       <form id="config-form">
         <div class="form-grid">
+          <div class="field"><label for="device-name">设备名称</label><input id="device-name" name="deviceName" type="text" required
+            maxlength="24" autocomplete="off" placeholder="例如 客厅电脑"></div>
+          <div class="field"><label for="topic">巴法云主题</label><input id="topic" name="topic" type="text" required
+            maxlength="64" pattern="[A-Za-z0-9]+" autocomplete="off" spellcheck="false" placeholder="例如 lazystick005"></div>
           <div class="field"><label for="uid">巴法云 Private Key</label><div class="input-wrap"><input id="uid" name="uid"
             type="password" required maxlength="64" pattern="[A-Za-z0-9]+" autocomplete="off" spellcheck="false" placeholder="与 LazyStick 设置页保持一致">
             <button id="reveal" class="reveal" type="button">显示</button></div></div>
-          <div class="field"><label for="topic">巴法云主题</label><input id="topic" name="topic" type="text" required
-            maxlength="64" pattern="[A-Za-z0-9]+" autocomplete="off" spellcheck="false" placeholder="例如 lazystick005"></div>
         </div>
-        <p class="config-note">配置保存在 lazystick.icu 当前浏览器的本地存储中，关闭页面或浏览器后仍会保留；清除浏览器网站数据、使用无痕模式或更换浏览器后不会保留。请勿在公共设备上保存私钥。</p>
-        <div class="form-actions"><button id="clear-config" class="secondary" type="button">清除</button>
-          <button class="primary" type="submit">保存配置</button></div>
+        <p class="config-note">设备配置保存在 lazystick.icu 当前浏览器的本地存储中，关闭页面或浏览器后仍会保留；清除浏览器网站数据、使用无痕模式或更换浏览器后不会保留。请勿在公共设备上保存私钥。</p>
+        <div class="form-actions"><button id="delete-device" class="secondary" type="button">删除设备</button>
+          <button class="primary" type="submit">保存设备</button></div>
       </form>
     </section>
 
@@ -130,18 +145,26 @@
       'use strict';
       const API='https://apis.bemfa.com/va/postJsonMsg';
       const ONLINE_API='https://apis.bemfa.com/va/online';
-      const STORAGE_KEY='lazystick.bemfa.remote.v1';
+      const STORAGE_KEY='lazystick.bemfa.remote.v2';
+      const LEGACY_STORAGE_KEY='lazystick.bemfa.remote.v1';
       const THEME_KEY='lazystick.remote.theme';
+      const MAX_DEVICES=8;
       const form=document.getElementById('config-form');
       const settings=document.getElementById('settings');
       const settingsToggle=document.getElementById('settings-toggle');
+      const deviceSelect=document.getElementById('device-select');
+      const newDeviceButton=document.getElementById('new-device');
+      const deleteDeviceButton=document.getElementById('delete-device');
       const status=document.getElementById('status');
       const statusDetail=document.getElementById('status-detail');
       const statusDot=document.getElementById('status-dot');
       const refreshStatus=document.getElementById('refresh-status');
       const toast=document.getElementById('toast');
       const actionButtons=[...document.querySelectorAll('.action')];
-      let config={uid:'',topic:''};
+      let devices=[];
+      let activeId='';
+      let config={name:'',uid:'',topic:''};
+      let draft=false;
       let busy=false;
       let toastTimer=0;
       let statusRequest=null;
@@ -149,8 +172,10 @@
       function storageGet(key){try{return localStorage.getItem(key)}catch{return null}}
       function storageSet(key,value){try{localStorage.setItem(key,value);return true}catch{return false}}
       function storageRemove(key){try{localStorage.removeItem(key)}catch{}}
-      function isValid(value){return /^[A-Za-z0-9]+$/.test(value)}
-      function configured(){return isValid(config.uid)&&isValid(config.topic)}
+      function isValidCredential(value){return /^[A-Za-z0-9]+$/.test(value)}
+      function configured(){return Boolean(activeId)&&isValidCredential(config.uid)&&isValidCredential(config.topic)}
+      function deviceById(id){return devices.find(device=>device.id===id)||null}
+      function makeId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
       function setStatus(message,tone='',detail=''){
         status.textContent=message;statusDetail.textContent=detail;statusDot.className='dot'+(tone?' '+tone:'');
       }
@@ -159,7 +184,9 @@
         toastTimer=setTimeout(()=>toast.className='toast',3600);
       }
       function setBusy(value){busy=value;actionButtons.forEach(button=>button.disabled=value);
-        refreshStatus.disabled=value||!configured()||statusRequest!==null}
+        refreshStatus.disabled=value||!configured()||statusRequest!==null;
+        deviceSelect.disabled=value||(!devices.length&&!draft);newDeviceButton.disabled=value||devices.length>=MAX_DEVICES;
+        deleteDeviceButton.disabled=value||!activeId}
       function setSettingsVisible(visible){settings.hidden=!visible;settingsToggle.setAttribute('aria-expanded',String(visible));
         settingsToggle.textContent=visible?'收起配置':'巴法云配置'}
       function applyTheme(theme){
@@ -167,28 +194,72 @@
         document.querySelector('meta[name="theme-color"]').content=next==='dark'?'#070b14':'#eef2f7';
         document.getElementById('theme-toggle').textContent=next==='dark'?'☀ 切换明色':'☾ 切换暗色';
       }
-      function loadConfig(){
-        try{const saved=JSON.parse(storageGet(STORAGE_KEY)||'{}');config={uid:saved.uid||'',topic:saved.topic||''}}catch{config={uid:'',topic:''}}
-        form.elements.uid.value=config.uid;form.elements.topic.value=config.topic;
-        refreshStatus.disabled=!configured();
-        if(configured()){setStatus('正在检查设备状态','busy','主题：'+config.topic);setSettingsVisible(false);checkOnline()}
-        else{setStatus('尚未配置巴法云','','保存配置后自动检查设备状态');setSettingsVisible(true)}
-        setBusy(false);
+      function abortStatusRequest(){if(statusRequest){statusRequest.abort();statusRequest=null}}
+      function persistDevices(){
+        return storageSet(STORAGE_KEY,JSON.stringify({activeId,devices}));
+      }
+      function renderDeviceSelect(){
+        deviceSelect.replaceChildren();
+        if(draft){deviceSelect.add(new Option('正在添加新设备',''))}
+        devices.forEach(device=>deviceSelect.add(new Option(device.name,device.id)));
+        if(!devices.length&&!draft)deviceSelect.add(new Option('尚未添加设备',''));
+        deviceSelect.value=activeId;deviceSelect.disabled=busy||(!devices.length&&!draft);
+        newDeviceButton.disabled=busy||devices.length>=MAX_DEVICES;deleteDeviceButton.disabled=busy||!activeId;
+      }
+      function fillForm(){
+        form.elements.deviceName.value=config.name;form.elements.uid.value=config.uid;form.elements.topic.value=config.topic;
+      }
+      function selectDevice(id,check=true){
+        const device=deviceById(id);if(!device)return;
+        abortStatusRequest();draft=false;activeId=device.id;config={name:device.name,uid:device.uid,topic:device.topic};
+        fillForm();renderDeviceSelect();persistDevices();setBusy(false);setSettingsVisible(false);
+        setStatus('正在检查设备状态','busy',config.name+' · 主题：'+config.topic);
+        if(check)checkOnline();
+      }
+      function startNewDevice(focus=true){
+        if(devices.length>=MAX_DEVICES){showToast('最多保存 '+MAX_DEVICES+' 台设备',true);return}
+        abortStatusRequest();draft=true;activeId='';config={name:'LazyStick '+(devices.length+1),uid:'',topic:''};
+        fillForm();renderDeviceSelect();setBusy(false);setSettingsVisible(true);
+        setStatus('正在添加新设备','','填写名称、Private Key 和主题后保存');
+        if(focus)form.elements.deviceName.focus();
+      }
+      function normalizeDevice(value,index){
+        if(!value||!isValidCredential(String(value.uid||''))||!isValidCredential(String(value.topic||'')))return null;
+        const name=String(value.name||('LazyStick '+(index+1))).trim().slice(0,24)||('LazyStick '+(index+1));
+        return {id:String(value.id||makeId()),name,uid:String(value.uid),topic:String(value.topic)};
+      }
+      function loadDevices(){
+        let saved=null;try{saved=JSON.parse(storageGet(STORAGE_KEY)||'null')}catch{}
+        if(saved&&Array.isArray(saved.devices)){
+          devices=saved.devices.slice(0,MAX_DEVICES).map(normalizeDevice).filter(Boolean);
+          activeId=deviceById(String(saved.activeId||''))?String(saved.activeId):devices[0]?.id||'';
+        }
+        if(!devices.length){
+          let legacy=null;try{legacy=JSON.parse(storageGet(LEGACY_STORAGE_KEY)||'null')}catch{}
+          if(legacy&&isValidCredential(String(legacy.uid||''))&&isValidCredential(String(legacy.topic||''))){
+            const migrated={id:makeId(),name:'LazyStick 1',uid:String(legacy.uid),topic:String(legacy.topic)};
+            devices=[migrated];activeId=migrated.id;
+            if(persistDevices())storageRemove(LEGACY_STORAGE_KEY);
+          }
+        }
+        if(activeId)selectDevice(activeId);
+        else startNewDevice(false);
       }
       function checkedAt(){return new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'})}
       async function checkOnline(silent=false){
-        if(!configured()||busy)return;if(statusRequest)statusRequest.abort();const controller=new AbortController();statusRequest=controller;
+        if(!configured()||busy)return;abortStatusRequest();const controller=new AbortController();statusRequest=controller;
+        const requestedId=activeId;const requestedConfig={...config};
         refreshStatus.disabled=true;const timeout=setTimeout(()=>controller.abort(),8000);
-        if(!silent)setStatus('正在检查设备状态','busy','主题：'+config.topic);
+        if(!silent)setStatus('正在检查设备状态','busy',requestedConfig.name+' · 主题：'+requestedConfig.topic);
         try{
-          const url=new URL(ONLINE_API);url.search=new URLSearchParams({uid:config.uid,topic:config.topic,type:'1'});
+          const url=new URL(ONLINE_API);url.search=new URLSearchParams({uid:requestedConfig.uid,topic:requestedConfig.topic,type:'1'});
           const response=await fetch(url,{cache:'no-store',signal:controller.signal});const result=await response.json().catch(()=>null);
           if(!response.ok||!result||result.code!==0||typeof result.data!=='boolean')throw new Error(result?.message||('HTTP '+response.status));
-          if(statusRequest!==controller)return;
-          if(result.data)setStatus('LazyStick 在线','ready','MQTT 主题已订阅 · '+checkedAt());
-          else setStatus('LazyStick 离线','error','未检测到该主题的在线订阅 · '+checkedAt());
+          if(statusRequest!==controller||activeId!==requestedId)return;
+          if(result.data)setStatus(requestedConfig.name+' 在线','ready','MQTT 主题已订阅 · '+checkedAt());
+          else setStatus(requestedConfig.name+' 离线','error','未检测到该主题的在线订阅 · '+checkedAt());
         }catch(error){
-          if(statusRequest!==controller)return;
+          if(statusRequest!==controller||activeId!==requestedId)return;
           if(error.name!=='AbortError')setStatus('设备状态未知','error','查询失败：'+error.message);
           else setStatus('设备状态未知','error','查询超时，请检查网络');
         }finally{clearTimeout(timeout);if(statusRequest===controller){statusRequest=null;refreshStatus.disabled=!configured()}}
@@ -203,16 +274,17 @@
         }finally{clearTimeout(timeout)}
       }
       async function sendAction(button){
-        if(busy)return;if(!configured()){setSettingsVisible(true);form.elements.topic.focus();showToast('请先保存巴法云配置',true);return}
+        if(busy)return;if(!configured()){setSettingsVisible(true);form.elements.topic.focus();showToast('请先添加并保存设备',true);return}
         const warning=button.dataset.confirm;if(warning&&!confirm(warning))return;
-        if(statusRequest){statusRequest.abort();statusRequest=null}
-        const payloads=button.dataset.payloads.split('|');setBusy(true);setStatus('正在发送 · '+button.dataset.label,'busy','通过巴法云 HTTPS 接口提交');
+        abortStatusRequest();const payloads=button.dataset.payloads.split('|');setBusy(true);
+        setStatus('正在发送 · '+button.dataset.label,'busy',config.name+' · 通过巴法云 HTTPS 接口提交');
         try{
           for(let index=0;index<payloads.length;index++){
             await publish(payloads[index]);
             if(index+1<payloads.length)await new Promise(resolve=>setTimeout(resolve,350));
           }
-          setStatus('发送成功 · '+button.dataset.label,'ready','巴法云已接受消息，正在刷新设备状态');showToast('已通过巴法云发送：'+button.dataset.label);
+          setStatus('发送成功 · '+button.dataset.label,'ready',config.name+' · 巴法云已接受消息，正在刷新设备状态');
+          showToast('已发送到 '+config.name+'：'+button.dataset.label);
           setTimeout(checkOnline,1200);
         }catch(error){
           const message=error.name==='AbortError'?'请求超时，请检查网络':'发送失败：'+error.message;
@@ -221,6 +293,8 @@
       }
 
       settingsToggle.addEventListener('click',()=>setSettingsVisible(settings.hidden));
+      deviceSelect.addEventListener('change',()=>{if(deviceSelect.value)selectDevice(deviceSelect.value)});
+      newDeviceButton.addEventListener('click',()=>startNewDevice());
       refreshStatus.addEventListener('click',checkOnline);
       document.getElementById('theme-toggle').addEventListener('click',()=>{
         const next=document.documentElement.dataset.theme==='dark'?'light':'dark';applyTheme(next);storageSet(THEME_KEY,next);
@@ -228,23 +302,32 @@
       document.getElementById('reveal').addEventListener('click',event=>{
         const visible=form.elements.uid.type==='text';form.elements.uid.type=visible?'password':'text';event.currentTarget.textContent=visible?'显示':'隐藏';
       });
-      document.getElementById('clear-config').addEventListener('click',()=>{
-        const hasValue=config.uid||config.topic||form.elements.uid.value||form.elements.topic.value;
-        if(!hasValue)return;if(!confirm('确定清除当前浏览器保存的巴法云主题和私钥吗？'))return;
-        if(statusRequest){statusRequest.abort();statusRequest=null}
-        config={uid:'',topic:''};storageRemove(STORAGE_KEY);form.reset();refreshStatus.disabled=true;
-        setStatus('尚未配置巴法云','','保存配置后自动检查设备状态');setSettingsVisible(true);setBusy(false);showToast('本地配置已清除');
+      deleteDeviceButton.addEventListener('click',()=>{
+        const device=deviceById(activeId);if(!device)return;
+        if(!confirm('确定删除设备“'+device.name+'”及其浏览器本地配置吗？'))return;
+        abortStatusRequest();const index=devices.findIndex(item=>item.id===activeId);devices.splice(index,1);
+        activeId=devices[Math.min(index,devices.length-1)]?.id||'';persistDevices();
+        if(activeId)selectDevice(activeId);else startNewDevice(false);
+        showToast('已删除设备：'+device.name);
       });
       form.addEventListener('submit',event=>{
-        event.preventDefault();const uid=form.elements.uid.value.trim();const topic=form.elements.topic.value.trim();
-        if(!isValid(uid)||!isValid(topic)){showToast('主题和私钥只能包含英文字母与数字',true);return}
-        if(statusRequest){statusRequest.abort();statusRequest=null}
-        config={uid,topic};if(!storageSet(STORAGE_KEY,JSON.stringify(config)))showToast('浏览器禁止本地存储，本次打开期间仍可使用',true);
-        refreshStatus.disabled=false;setStatus('正在检查设备状态','busy','主题：'+topic);setSettingsVisible(false);setBusy(false);
-        showToast('巴法云配置已保存');checkOnline();
+        event.preventDefault();const name=form.elements.deviceName.value.trim();const uid=form.elements.uid.value.trim();const topic=form.elements.topic.value.trim();
+        if(!name){showToast('请填写设备名称',true);return}
+        if(!isValidCredential(uid)||!isValidCredential(topic)){showToast('主题和私钥只能包含英文字母与数字',true);return}
+        if(devices.some(device=>device.id!==activeId&&device.name.toLocaleLowerCase()===name.toLocaleLowerCase())){
+          showToast('设备名称不能重复',true);return
+        }
+        if(!activeId&&devices.length>=MAX_DEVICES){showToast('最多保存 '+MAX_DEVICES+' 台设备',true);return}
+        abortStatusRequest();let device=deviceById(activeId);
+        if(device)Object.assign(device,{name,uid,topic});
+        else{device={id:makeId(),name,uid,topic};devices.push(device);activeId=device.id}
+        draft=false;config={name,uid,topic};renderDeviceSelect();
+        const stored=persistDevices();refreshStatus.disabled=false;
+        setStatus('正在检查设备状态','busy',name+' · 主题：'+topic);setSettingsVisible(false);setBusy(false);
+        showToast(stored?'设备配置已保存':'浏览器禁止本地存储，本次打开期间仍可使用',!stored);checkOnline();
       });
       actionButtons.forEach(button=>button.addEventListener('click',()=>sendAction(button)));
-      applyTheme(storageGet(THEME_KEY)||'dark');loadConfig();setInterval(()=>{if(configured()&&!busy)checkOnline(true)},30000);
+      applyTheme(storageGet(THEME_KEY)||'dark');loadDevices();setInterval(()=>{if(configured()&&!busy)checkOnline(true)},30000);
     })();
   </script>
 </body>
