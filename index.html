@@ -19,6 +19,7 @@
       padding:28px 18px 100px}.hero{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;margin-bottom:28px}
     .eyebrow{font-size:12px;font-weight:850;letter-spacing:.14em;color:var(--accent)}h1{margin:7px 0 8px;
       font-size:clamp(31px,8vw,46px);letter-spacing:-.045em}.subtitle{margin:0;color:var(--muted);line-height:1.65}
+    .device-address{margin:7px 0 0;color:var(--muted);font-size:12px;overflow-wrap:anywhere}
     .hero-tools{display:grid;justify-items:end;gap:9px}.page-links{display:flex;align-items:center;justify-content:flex-end;gap:7px;flex-wrap:wrap}.icon-button,.settings-button{
       border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--accent);font:inherit;font-size:12px;
       font-weight:700;padding:7px 10px;cursor:pointer}.icon-button:hover,.settings-button:hover{border-color:var(--accent)}
@@ -69,7 +70,8 @@
   <main class="shell">
     <header class="hero">
       <div><span class="eyebrow">BEMFA REMOTE</span><h1>LazyStick 远程控制</h1>
-        <p class="subtitle">通过巴法云控制设备，不要求手机与 LazyStick 位于同一局域网。</p></div>
+        <p class="subtitle">通过巴法云控制设备，不要求手机与 LazyStick 位于同一局域网。</p>
+        <p id="current-device" class="device-address">当前设备：尚未选择</p></div>
       <div class="hero-tools">
         <div id="device-state" class="device offline" title="巴法云主题在线状态" aria-live="polite"><i></i><span id="status">尚未配置设备</span></div>
         <div class="page-links"><button id="settings-toggle" class="settings-button" type="button" aria-expanded="false">设备配置</button>
@@ -148,6 +150,7 @@
       const deleteDeviceButton=document.getElementById('delete-device');
       const deviceState=document.getElementById('device-state');
       const status=document.getElementById('status');
+      const currentDevice=document.getElementById('current-device');
       const toast=document.getElementById('toast');
       const actionButtons=[...document.querySelectorAll('.action')];
       let devices=[];
@@ -200,6 +203,7 @@
       function selectDevice(id,check=true,keepSettings=false){
         const device=deviceById(id);if(!device)return;
         abortStatusRequest();draft=false;activeId=device.id;config={name:device.name,uid:device.uid,topic:device.topic};
+        currentDevice.textContent='当前设备：'+config.name;
         fillForm();renderDeviceSelect();persistDevices();setBusy(false);if(!keepSettings)setSettingsVisible(false);
         setStatus(config.name+' 状态检查中','busy');
         if(check)checkOnline();
@@ -207,6 +211,7 @@
       function startNewDevice(focus=true){
         if(devices.length>=MAX_DEVICES){showToast('最多保存 '+MAX_DEVICES+' 台设备',true);return}
         abortStatusRequest();draft=true;activeId='';config={name:'LazyStick '+(devices.length+1),uid:'',topic:''};
+        currentDevice.textContent='当前设备：正在添加新设备';
         fillForm();renderDeviceSelect();setBusy(false);setSettingsVisible(true);
         setStatus('尚未配置设备','offline');
         if(focus)form.elements.deviceName.focus();
@@ -304,7 +309,7 @@
         abortStatusRequest();let device=deviceById(activeId);
         if(device)Object.assign(device,{name,uid,topic});
         else{device={id:makeId(),name,uid,topic};devices.push(device);activeId=device.id}
-        draft=false;config={name,uid,topic};renderDeviceSelect();
+        draft=false;config={name,uid,topic};currentDevice.textContent='当前设备：'+name;renderDeviceSelect();
         const stored=persistDevices();
         setStatus(name+' 状态检查中','busy');setSettingsVisible(false);setBusy(false);
         showToast(stored?'设备配置已保存':'浏览器禁止本地存储，本次打开期间仍可使用',!stored);checkOnline();
