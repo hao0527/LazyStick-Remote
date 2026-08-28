@@ -10,18 +10,18 @@
   <style>
     :root{color-scheme:dark;--bg:#070b14;--card:#111827;--surface:#172033;--text:#f8fafc;--muted:#94a3b8;
       --line:#2b3952;--accent:#38bdf8;--accent-dark:#0284c7;--soft:#0c4a6e;--ok:#34d399;--warn:#fbbf24;
-      --danger:#fb7185;--shadow:#0005;--glow:#172554;--overlay:#070b14ed}
+      --danger:#fb7185;--shadow:#0005;--glow:#172554;--overlay:#070b14ed;--danger-bg:#2a1420;--warning-bg:#261d10}
     :root[data-theme="light"]{color-scheme:light;--bg:#eef2f7;--card:#fff;--surface:#f8fafc;--text:#172033;
       --muted:#64748b;--line:#dbe3ef;--accent:#2563eb;--accent-dark:#1d4ed8;--soft:#dbeafe;--ok:#047857;
-      --warn:#a16207;--danger:#be123c;--shadow:#1e3a5f18;--glow:#dbeafe;--overlay:#eff6fff2}
-    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:linear-gradient(180deg,var(--glow),var(--bg) 330px);
-      color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}.shell{width:min(860px,100%);margin:auto;
-      padding:28px 16px 78px}.hero{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;padding:10px 3px 20px}
+      --warn:#a16207;--danger:#be123c;--shadow:#1e3a5f18;--glow:#dbeafe;--overlay:#eff6fff2;--danger-bg:#fff1f2;--warning-bg:#fffbeb}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 80% 0,var(--glow) 0,transparent 38%),var(--bg);
+      color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}.shell{width:min(900px,100%);margin:auto;
+      padding:28px 18px 100px}.hero{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;margin-bottom:28px}
     .eyebrow{font-size:12px;font-weight:850;letter-spacing:.14em;color:var(--accent)}h1{margin:7px 0 8px;
       font-size:clamp(31px,8vw,46px);letter-spacing:-.045em}.subtitle{margin:0;color:var(--muted);line-height:1.65}
-    .hero-tools{display:flex;gap:9px;align-items:center;flex-wrap:wrap;justify-content:flex-end}.icon-button,.settings-button{
-      border:1px solid var(--line);border-radius:11px;background:var(--card);color:var(--text);font:inherit;font-weight:750;
-      padding:10px 12px;cursor:pointer;box-shadow:0 10px 30px var(--shadow)}.icon-button{width:43px;padding:10px 0}
+    .hero-tools{display:flex;gap:7px;align-items:center;flex-wrap:wrap;justify-content:flex-end}.icon-button,.settings-button{
+      border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--accent);font:inherit;font-size:12px;
+      font-weight:700;padding:7px 10px;cursor:pointer}.icon-button:hover,.settings-button:hover{border-color:var(--accent)}
     .status-row{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:2px 0 15px;padding:13px 15px;
       border:1px solid var(--line);border-radius:14px;background:var(--card);box-shadow:0 12px 32px var(--shadow)}
     .status-main{display:flex;flex:1;align-items:flex-start;gap:10px;min-width:0}.status-text{min-width:0}.status-detail{margin-top:3px;
@@ -43,21 +43,21 @@
     .primary{flex:1;border:0;background:var(--accent);color:#fff}.primary:hover{background:var(--accent-dark)}.secondary{border:1px solid var(--line);
       background:var(--surface);color:var(--text)}.group{margin:14px 0;padding:21px;border:1px solid var(--line);border-radius:20px;
       background:var(--card);box-shadow:0 15px 40px var(--shadow)}.group-head{margin-bottom:15px}.grid{display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.action{position:relative;min-height:72px;border:1px solid var(--line);
-      border-radius:14px;background:var(--surface);color:var(--text);font:inherit;font-size:15px;font-weight:780;text-align:left;
-      padding:15px 16px;cursor:pointer;transition:transform .12s,border-color .12s,background .12s}.action::after{content:"发送";
-      position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--muted);font-weight:700}
+      grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.action{min-height:72px;border:1px solid var(--line);
+      border-radius:14px;background:var(--surface);color:var(--text);font:inherit;font-size:15px;font-weight:700;text-align:left;
+      padding:13px 14px;cursor:pointer;touch-action:manipulation;transition:transform .12s,border-color .12s,background .12s}
+    .action small{display:block;color:var(--muted);font-size:11px;font-weight:500;margin-top:5px}
     .action:hover{transform:translateY(-1px);border-color:var(--accent);background:color-mix(in srgb,var(--surface) 84%,var(--soft))}
-    .action:active{transform:translateY(0)}.action:disabled{opacity:.5;cursor:not-allowed;transform:none}.action.danger{border-color:color-mix(in srgb,var(--danger) 42%,var(--line));
-      color:var(--danger)}.action.warning{border-color:color-mix(in srgb,var(--warn) 42%,var(--line));color:var(--warn)}
+    .action:active{transform:scale(.98)}.action:focus-visible{outline:3px solid #38bdf855;outline-offset:2px}.action:disabled{opacity:.5;cursor:not-allowed;transform:none}.action.danger{border-color:var(--danger);
+      color:var(--danger);background:var(--danger-bg)}.action.warning{border-color:var(--warn);color:var(--warn);background:var(--warning-bg)}
     .privacy{margin-top:18px;padding:14px 16px;border-radius:13px;background:var(--soft);color:var(--muted);font-size:12px;
       line-height:1.7}.privacy strong{color:var(--text)}[hidden]{display:none!important}.toast{position:fixed;z-index:30;left:50%;bottom:24px;
       width:min(520px,calc(100% - 28px));transform:translate(-50%,20px);opacity:0;pointer-events:none;padding:13px 16px;
       border:1px solid var(--line);border-radius:13px;background:var(--card);color:var(--text);box-shadow:0 22px 70px var(--shadow);
       transition:.2s}.toast.show{opacity:1;transform:translate(-50%,0)}.toast.error{border-color:var(--danger);color:var(--danger)}
     @media(max-width:600px){.shell{padding:18px 12px 66px}.hero{display:block}.hero-tools{justify-content:flex-start;margin-top:15px}
-      .endpoint{display:none}.status-row{align-items:stretch;flex-direction:column}.status-tools{justify-content:flex-end}.settings,.group{padding:17px 14px;border-radius:16px}.form-grid{grid-template-columns:1fr}.grid{grid-template-columns:1fr}
-      .action{min-height:62px}}@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+      .endpoint{display:none}.status-row{align-items:stretch;flex-direction:column}.status-tools{justify-content:flex-end}.settings,.group{padding:17px 14px;border-radius:16px}.form-grid{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .action{min-height:68px;padding:11px}}@media(prefers-reduced-motion:reduce){*{transition:none!important}}
   </style>
 </head>
 <body>
@@ -66,7 +66,7 @@
       <div><span class="eyebrow">BEMFA REMOTE</span><h1>LazyStick 远程控制</h1>
         <p class="subtitle">通过巴法云控制设备，不要求手机与 LazyStick 位于同一局域网。</p></div>
       <div class="hero-tools">
-        <button id="theme-toggle" class="icon-button" type="button" aria-label="切换明暗主题">☀</button>
+        <button id="theme-toggle" class="icon-button" type="button" aria-label="切换明暗主题">☀ 切换明色</button>
         <button id="settings-toggle" class="settings-button" type="button" aria-expanded="false">巴法云配置</button>
       </div>
     </header>
@@ -94,29 +94,29 @@
       </form>
     </section>
 
-    <section class="group"><div class="group-head"><h2>电脑</h2><p>开机 / 唤醒、休眠与系统操作</p></div><div class="grid">
-      <button class="action" type="button" data-label="电脑开机 / 唤醒" data-payloads="on#1">电脑开机 / 唤醒</button>
-      <button class="action" type="button" data-label="电脑休眠" data-payloads="on#2">电脑休眠</button>
-      <button class="action danger" type="button" data-label="电脑关机" data-payloads="on#3" data-confirm="将向电脑发送关机指令，请先保存工作。确定继续吗？">电脑关机</button>
-      <button class="action warning" type="button" data-label="进入设置模式" data-payloads="on#4" data-confirm="设备会重启并离线，之后必须在设备附近连接其配网热点。确定继续吗？">进入设置模式</button>
+    <section class="group"><div class="group-head"><h2>电脑</h2><p>唤醒、休眠与系统操作</p></div><div class="grid">
+      <button class="action" type="button" data-label="电脑开机 / 唤醒" data-payloads="on#1"><span>电脑开机 / 唤醒</span><small>点击执行</small></button>
+      <button class="action" type="button" data-label="电脑休眠" data-payloads="on#2"><span>电脑休眠</span><small>点击执行</small></button>
+      <button class="action danger" type="button" data-label="电脑关机" data-payloads="on#3" data-confirm="将向电脑发送关机指令，请先保存工作。确定继续吗？"><span>电脑关机</span><small>点击执行</small></button>
+      <button class="action warning" type="button" data-label="进入设置模式" data-payloads="on#4" data-confirm="设备会重启并离线，之后必须在设备附近连接其配网热点。确定继续吗？"><span>进入设置模式</span><small>点击执行</small></button>
     </div></section>
 
     <section class="group"><div class="group-head"><h2>媒体</h2><p>音量与播放控制</p></div><div class="grid">
-      <button class="action" type="button" data-label="音量 +" data-payloads="on#6|on#x#xx#1">音量 +</button>
-      <button class="action" type="button" data-label="音量 -" data-payloads="on#6|on#x#xx#2">音量 -</button>
-      <button class="action" type="button" data-label="静音 / 取消静音" data-payloads="on#6|on#x#xx#0">静音 / 取消静音</button>
-      <button class="action" type="button" data-label="播放 / 暂停" data-payloads="on#6|on#x#xx#5">播放 / 暂停</button>
-      <button class="action" type="button" data-label="上一首" data-payloads="on#6|on#x#xx#4">上一首</button>
-      <button class="action" type="button" data-label="下一首" data-payloads="on#6|on#x#xx#3">下一首</button>
+      <button class="action" type="button" data-label="音量 +" data-payloads="on#6|on#x#xx#1"><span>音量 +</span><small>点击执行</small></button>
+      <button class="action" type="button" data-label="音量 -" data-payloads="on#6|on#x#xx#2"><span>音量 -</span><small>点击执行</small></button>
+      <button class="action" type="button" data-label="静音 / 取消静音" data-payloads="on#6|on#x#xx#0"><span>静音 / 取消静音</span><small>点击执行</small></button>
+      <button class="action" type="button" data-label="播放 / 暂停" data-payloads="on#6|on#x#xx#5"><span>播放 / 暂停</span><small>点击执行</small></button>
+      <button class="action" type="button" data-label="上一首" data-payloads="on#6|on#x#xx#4"><span>上一首</span><small>点击执行</small></button>
+      <button class="action" type="button" data-label="下一首" data-payloads="on#6|on#x#xx#3"><span>下一首</span><small>点击执行</small></button>
     </div></section>
 
-    <section class="group"><div class="group-head"><h2>键盘宏</h2><p>执行 LazyStick 设置页中保存的组合动作</p></div><div class="grid">
-      <button class="action" type="button" data-label="宏 1" data-payloads="on#7|on#x#xx#0">宏 1</button>
-      <button class="action" type="button" data-label="宏 2" data-payloads="on#7|on#x#xx#1">宏 2</button>
-      <button class="action" type="button" data-label="宏 3" data-payloads="on#7|on#x#xx#2">宏 3</button>
-      <button class="action" type="button" data-label="宏 4" data-payloads="on#7|on#x#xx#3">宏 4</button>
-      <button class="action" type="button" data-label="宏 5" data-payloads="on#7|on#x#xx#4">宏 5</button>
-      <button class="action" type="button" data-label="宏 6" data-payloads="on#7|on#x#xx#5">宏 6</button>
+    <section class="group"><div class="group-head"><h2>键盘宏</h2><p>执行设置页面中保存的组合动作</p></div><div class="grid">
+      <button class="action" type="button" data-label="宏 1" data-payloads="on#7|on#x#xx#0"><span>宏 1</span><small>点击执行</small></button>
+      <button class="action" type="button" data-label="宏 2" data-payloads="on#7|on#x#xx#1"><span>宏 2</span><small>点击执行</small></button>
+      <button class="action" type="button" data-label="宏 3" data-payloads="on#7|on#x#xx#2"><span>宏 3</span><small>点击执行</small></button>
+      <button class="action" type="button" data-label="宏 4" data-payloads="on#7|on#x#xx#3"><span>宏 4</span><small>点击执行</small></button>
+      <button class="action" type="button" data-label="宏 5" data-payloads="on#7|on#x#xx#4"><span>宏 5</span><small>点击执行</small></button>
+      <button class="action" type="button" data-label="宏 6" data-payloads="on#7|on#x#xx#5"><span>宏 6</span><small>点击执行</small></button>
     </div></section>
 
     <aside class="privacy"><strong>工作方式：</strong>此页面通过巴法云官方 HTTPS 接口发送指令并查询主题订阅状态，
@@ -158,14 +158,14 @@
         clearTimeout(toastTimer);toast.textContent=message;toast.className='toast show'+(isError?' error':'');
         toastTimer=setTimeout(()=>toast.className='toast',3600);
       }
-      function setBusy(value){busy=value;actionButtons.forEach(button=>button.disabled=value||!configured());
+      function setBusy(value){busy=value;actionButtons.forEach(button=>button.disabled=value);
         refreshStatus.disabled=value||!configured()||statusRequest!==null}
       function setSettingsVisible(visible){settings.hidden=!visible;settingsToggle.setAttribute('aria-expanded',String(visible));
         settingsToggle.textContent=visible?'收起配置':'巴法云配置'}
       function applyTheme(theme){
         const next=theme==='light'?'light':'dark';document.documentElement.dataset.theme=next;
         document.querySelector('meta[name="theme-color"]').content=next==='dark'?'#070b14':'#eef2f7';
-        document.getElementById('theme-toggle').textContent=next==='dark'?'☀':'☾';
+        document.getElementById('theme-toggle').textContent=next==='dark'?'☀ 切换明色':'☾ 切换暗色';
       }
       function loadConfig(){
         try{const saved=JSON.parse(storageGet(STORAGE_KEY)||'{}');config={uid:saved.uid||'',topic:saved.topic||''}}catch{config={uid:'',topic:''}}
