@@ -61,7 +61,7 @@
       width:min(520px,calc(100% - 28px));transform:translate(-50%,20px);opacity:0;pointer-events:none;padding:13px 16px;
       border:1px solid var(--line);border-radius:13px;background:var(--card);color:var(--text);box-shadow:0 22px 70px var(--shadow);
       transition:.2s}.toast.show{opacity:1;transform:translate(-50%,0)}.toast.error{border-color:var(--danger);color:var(--danger)}
-    @media(max-width:600px){.shell{padding:18px 12px 66px}.hero{display:block}.hero-tools{justify-items:start;margin-top:15px}.device{display:inline-flex}
+    @media(max-width:600px){.shell{padding:18px 12px 66px}.hero{display:block;position:relative}.hero-tools{display:block;margin-top:15px}.device{position:absolute;top:0;right:0;display:flex;max-width:52%}.device span{min-width:0;overflow:hidden;text-overflow:ellipsis}.page-links{justify-content:flex-start}
       .device-switcher{display:block}.device-picker{align-items:stretch;flex-direction:column;gap:6px}.device-actions{display:grid;grid-template-columns:1fr 1fr;margin-top:10px}.add-device,.remove-device{width:100%;height:38px;padding:7px 11px}.settings,.group{padding:17px 14px;border-radius:16px}.form-grid{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}
       .action{min-height:68px;padding:11px}}@media(prefers-reduced-motion:reduce){*{transition:none!important}}
   </style>
