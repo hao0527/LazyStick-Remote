@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>LazyStick 固件</title>
+  <style>
+    :root{color-scheme:light dark;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+    body{max-width:760px;margin:0 auto;padding:32px 20px;line-height:1.6}
+    h1{margin-bottom:4px}.hint{color:#777;margin-top:0}.release{border:1px solid #aaa6;border-radius:12px;padding:18px;margin:18px 0}
+    .release h2{margin:0 0 8px;font-size:1.15rem}.meta{font-size:.9rem;color:#777}.url{display:block;overflow-wrap:anywhere;margin:10px 0}
+    button{padding:8px 14px;border-radius:8px;border:1px solid #888;background:transparent;cursor:pointer}code{overflow-wrap:anywhere}
+  </style>
+</head>
+<body>
+  <h1>LazyStick 固件</h1>
+  <p class="hint">选择适用于设备的版本，复制固件直链并粘贴到设备升级页面。</p>
+  <div id="releases">正在读取版本列表…</div>
+  <script>
+    const root=document.getElementById('releases');
+    const escapeHtml=text=>String(text).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    fetch('./releases.json',{cache:'no-store'}).then(response=>{
+      if(!response.ok)throw new Error('HTTP '+response.status);return response.json();
+    }).then(data=>{
+      root.textContent='';
+      for(const item of data.releases||[]){
+        const section=document.createElement('section');section.className='release';
+        section.innerHTML=`<h2>${escapeHtml(item.name||item.tag)}</h2><div class="meta">${escapeHtml(item.tag)} · ${(item.size/1048576).toFixed(2)} MiB · ${escapeHtml(item.published_at)}</div><a class="url" href="${escapeHtml(item.url)}">${escapeHtml(item.url)}</a><button type="button">复制升级 URL</button><p class="meta">SHA-256：<code>${escapeHtml(item.sha256)}</code></p>`;
+        const button=section.querySelector('button');button.addEventListener('click',async()=>{await navigator.clipboard.writeText(item.url);button.textContent='已复制';});
+        root.append(section);
+      }
+      if(!root.children.length)root.textContent='暂无可用固件。';
+    }).catch(error=>{root.textContent='版本列表加载失败：'+error.message;});
+  </script>
+</body>
+</html>
