@@ -2,9 +2,9 @@
 
 在线地址：<https://lazystick.icu/>
 
-设备固件镜像位于 `https://lazystick.icu/firmware/`。镜像文件来自
-[`hao0527/LazyStick-Firmware`](https://github.com/hao0527/LazyStick-Firmware) 的不可变
-GitHub Release，由发布仓库中的 `scripts/sync-pages.ps1` 核验 SHA-256 后同步；不要手工替换同名固件。
+设备固件镜像位于 `https://lazystick.icu/firmware/`。加密固件同时归档在本仓库的不可变
+GitHub Release 中，由 `LazyStick_v2/scripts/publish-firmware.ps1` 核验加密包头、大小和
+SHA-256 后同步；不要手工替换同名固件。
 
 直接双击 `index.html`，使用现代版 Chrome、Edge、Firefox 或 Safari 打开即可。不需要安装软件或启动本地服务器，也不要求与 LazyStick 位于同一局域网。
 
