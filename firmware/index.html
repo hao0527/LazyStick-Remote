@@ -1,36 +1,54 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="dark">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>LazyStick 固件</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#070b14">
+  <meta name="description" content="下载 LazyStick 官方加密 OTA 固件，并复制固件直链用于设备升级。">
+  <link rel="canonical" href="https://lazystick.icu/firmware/">
+  <title>LazyStick 固件下载</title>
   <style>
-    :root{color-scheme:light dark;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
-    body{max-width:760px;margin:0 auto;padding:32px 20px;line-height:1.6}
-    h1{margin-bottom:4px}.hint{color:#777;margin-top:0}.release{border:1px solid #aaa6;border-radius:12px;padding:18px;margin:18px 0}
-    .release h2{margin:0 0 8px;font-size:1.15rem}.meta{font-size:.9rem;color:#777}.url{display:block;overflow-wrap:anywhere;margin:10px 0}
-    button{padding:8px 14px;border-radius:8px;border:1px solid #888;background:transparent;cursor:pointer}code{overflow-wrap:anywhere}
+    :root{color-scheme:dark;--bg:#070b14;--card:#111827;--surface:#172033;--text:#f8fafc;--muted:#94a3b8;--line:#2b3952;--accent:#38bdf8;--accent-dark:#0284c7;--soft:#0c4a6e;--ok:#34d399;--danger:#fb7185;--shadow:#0005;--glow:#172554}
+    :root[data-theme="light"]{color-scheme:light;--bg:#eef2f7;--card:#fff;--surface:#f8fafc;--text:#172033;--muted:#64748b;--line:#dbe3ef;--accent:#2563eb;--accent-dark:#1d4ed8;--soft:#dbeafe;--ok:#047857;--danger:#be123c;--shadow:#1e3a5f18;--glow:#dbeafe}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 80% 0,var(--glow) 0,transparent 38%),var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}.shell{width:min(900px,100%);margin:auto;padding:28px 18px 100px}
+    .hero{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;margin-bottom:28px}.eyebrow{font-size:12px;font-weight:850;letter-spacing:.14em;color:var(--accent)}h1{margin:7px 0 8px;font-size:clamp(31px,8vw,46px);letter-spacing:-.045em}.subtitle{margin:0;color:var(--muted);line-height:1.65}.hero-tools{display:grid;justify-items:end;gap:9px}.page-links{display:flex;align-items:center;justify-content:flex-end;gap:7px;flex-wrap:wrap}.icon-button,.control-link{border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--accent);font:inherit;font-size:12px;font-weight:700;padding:7px 10px;cursor:pointer;text-decoration:none}.icon-button:hover,.control-link:hover{border-color:var(--accent)}
+    .release-list{display:grid;gap:14px}.release{padding:21px;border:1px solid var(--line);border-radius:20px;background:var(--card);box-shadow:0 15px 40px var(--shadow)}.release-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}.release h2{margin:0;font-size:19px}.tag{display:inline-flex;border-radius:999px;background:var(--soft);color:var(--accent);font-size:11px;font-weight:800;padding:5px 9px;white-space:nowrap}.meta{margin:5px 0 0;color:var(--muted);font-size:12px;line-height:1.55}.firmware-url{display:block;margin:17px 0 12px;padding:12px 13px;border:1px solid var(--line);border-radius:11px;background:var(--surface);color:var(--accent);font-size:13px;line-height:1.5;overflow-wrap:anywhere}.actions{display:flex;gap:9px}.primary,.secondary{border-radius:11px;padding:11px 14px;font:inherit;font-size:13px;font-weight:800;cursor:pointer;text-decoration:none;text-align:center}.primary{border:0;background:var(--accent);color:#fff}.primary:hover{background:var(--accent-dark)}.secondary{border:1px solid var(--line);background:var(--surface);color:var(--text)}.checksum{margin:14px 0 0;color:var(--muted);font-size:11px;line-height:1.55}.checksum code{color:var(--text);overflow-wrap:anywhere}
+    .notice,.state{padding:14px 16px;border-radius:13px;background:var(--soft);color:var(--muted);font-size:12px;line-height:1.7}.notice{margin-top:18px}.notice strong{color:var(--text)}.state{margin:0;border:1px solid var(--line);background:var(--card)}.state.error{color:var(--danger)}.toast{position:fixed;z-index:30;left:50%;bottom:24px;width:min(520px,calc(100% - 28px));transform:translate(-50%,20px);opacity:0;pointer-events:none;padding:13px 16px;border:1px solid var(--line);border-radius:13px;background:var(--card);color:var(--text);box-shadow:0 22px 70px var(--shadow);transition:.2s}.toast.show{opacity:1;transform:translate(-50%,0)}.toast.error{border-color:var(--danger);color:var(--danger)}
+    @media(max-width:600px){.shell{padding:18px 12px 66px}.hero{display:block}.hero-tools{display:block;margin-top:15px}.page-links{justify-content:flex-start}.release{padding:17px 14px;border-radius:16px}.release-head{display:block}.tag{margin-top:10px}.actions{display:grid;grid-template-columns:1fr 1fr}}@media(prefers-reduced-motion:reduce){*{transition:none!important}}
   </style>
 </head>
 <body>
-  <h1>LazyStick 固件</h1>
-  <p class="hint">选择适用于设备的版本，复制固件直链并粘贴到设备升级页面。</p>
-  <div id="releases">正在读取版本列表…</div>
+  <main class="shell">
+    <header class="hero">
+      <div><span class="eyebrow">LAZYSTICK FIRMWARE</span><h1>固件下载</h1><p class="subtitle">下载官方加密 OTA 固件，或复制直链到设备的固件升级页面。</p></div>
+      <div class="hero-tools"><div class="page-links"><a class="control-link" href="/">返回远程控制</a><button id="theme-toggle" class="icon-button" type="button" aria-label="切换明暗主题">☀ 切换明色</button></div></div>
+    </header>
+    <div id="releases" class="release-list" aria-live="polite"><p class="state">正在读取版本列表…</p></div>
+    <aside class="notice"><strong>升级提示：</strong>设备只接受适用于 LazyStick 且通过发行签名验证的加密固件。升级期间请保持设备供电和网络稳定；下载失败不会替换当前运行版本。</aside>
+  </main>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script>
-    const root=document.getElementById('releases');
-    const escapeHtml=text=>String(text).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    fetch('./releases.json',{cache:'no-store'}).then(response=>{
-      if(!response.ok)throw new Error('HTTP '+response.status);return response.json();
-    }).then(data=>{
-      root.textContent='';
-      for(const item of data.releases||[]){
-        const section=document.createElement('section');section.className='release';
-        section.innerHTML=`<h2>${escapeHtml(item.name||item.tag)}</h2><div class="meta">${escapeHtml(item.tag)} · ${(item.size/1048576).toFixed(2)} MiB · ${escapeHtml(item.published_at)}</div><a class="url" href="${escapeHtml(item.url)}">${escapeHtml(item.url)}</a><button type="button">复制升级 URL</button><p class="meta">SHA-256：<code>${escapeHtml(item.sha256)}</code></p>`;
-        const button=section.querySelector('button');button.addEventListener('click',async()=>{await navigator.clipboard.writeText(item.url);button.textContent='已复制';});
-        root.append(section);
+    (()=>{
+      'use strict';
+      const root=document.getElementById('releases'),toast=document.getElementById('toast'),themeToggle=document.getElementById('theme-toggle');
+      const THEME_KEY='lazystick.remote.theme';let toastTimer=0;
+      function storageGet(key){try{return localStorage.getItem(key)}catch{return null}}
+      function storageSet(key,value){try{localStorage.setItem(key,value)}catch{}}
+      function applyTheme(theme){const next=theme==='light'?'light':'dark';document.documentElement.dataset.theme=next;document.querySelector('meta[name="theme-color"]').content=next==='dark'?'#070b14':'#eef2f7';themeToggle.textContent=next==='dark'?'☀ 切换明色':'☾ 切换暗色'}
+      function showToast(message,isError=false){clearTimeout(toastTimer);toast.textContent=message;toast.className='toast show'+(isError?' error':'');toastTimer=setTimeout(()=>toast.className='toast',3000)}
+      function validRelease(item){if(!item||typeof item!=='object')return false;try{const address=new URL(item.url,location.href);return address.protocol==='https:'&&address.origin===location.origin&&typeof item.sha256==='string'&&/^[0-9a-f]{64}$/i.test(item.sha256)&&Number.isSafeInteger(item.size)&&item.size>512}catch{return false}}
+      function element(tag,className,text){const node=document.createElement(tag);if(className)node.className=className;if(text!==undefined)node.textContent=text;return node}
+      function renderRelease(item){
+        const section=element('section','release'),head=element('div','release-head'),titleWrap=element('div');titleWrap.append(element('h2','',String(item.name||item.tag||'LazyStick 固件')));
+        const published=new Date(item.published_at),date=Number.isNaN(published.valueOf())?'发布时间未知':published.toLocaleString('zh-CN',{hour12:false});titleWrap.append(element('p','meta',`${(item.size/1048576).toFixed(2)} MiB · ${date}`));head.append(titleWrap,element('span','tag',String(item.tag||'RELEASE')));section.append(head);
+        const link=element('a','firmware-url',item.url);link.href=item.url;link.download=String(item.asset||'');section.append(link);
+        const actions=element('div','actions'),download=element('a','primary','下载固件');download.href=item.url;download.download=String(item.asset||'');
+        const copy=element('button','secondary','复制升级 URL');copy.type='button';copy.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(item.url);showToast('固件地址已复制')}catch{showToast('复制失败，请长按上方地址手动复制',true)}});actions.append(download,copy);section.append(actions);
+        const checksum=element('p','checksum','SHA-256：');checksum.append(element('code','',item.sha256));section.append(checksum);return section;
       }
-      if(!root.children.length)root.textContent='暂无可用固件。';
-    }).catch(error=>{root.textContent='版本列表加载失败：'+error.message;});
+      async function load(){try{const response=await fetch('./releases.json',{cache:'no-store'});if(!response.ok)throw new Error('HTTP '+response.status);const data=await response.json();if(data.schema!==1||!Array.isArray(data.releases))throw new Error('版本列表格式不受支持');const releases=data.releases.filter(validRelease);root.replaceChildren();if(!releases.length){root.append(element('p','state','暂无可用固件。'));return}releases.forEach(item=>root.append(renderRelease(item)))}catch(error){root.replaceChildren(element('p','state error','版本列表加载失败，请稍后重试。'));console.error(error)}}
+      themeToggle.addEventListener('click',()=>{const next=document.documentElement.dataset.theme==='dark'?'light':'dark';applyTheme(next);storageSet(THEME_KEY,next)});applyTheme(storageGet(THEME_KEY)||'dark');load();
+    })();
   </script>
 </body>
 </html>

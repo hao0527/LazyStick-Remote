@@ -20,9 +20,9 @@
     .eyebrow{font-size:12px;font-weight:850;letter-spacing:.14em;color:var(--accent)}h1{margin:7px 0 8px;
       font-size:clamp(31px,8vw,46px);letter-spacing:-.045em}.subtitle{margin:0;color:var(--muted);line-height:1.65}
     .device-address{margin:7px 0 0;color:var(--muted);font-size:12px;overflow-wrap:anywhere}
-    .hero-tools{display:grid;justify-items:end;gap:9px}.page-links{display:flex;align-items:center;justify-content:flex-end;gap:7px;flex-wrap:wrap}.icon-button,.settings-button{
+    .hero-tools{display:grid;justify-items:end;gap:9px}.page-links{display:flex;align-items:center;justify-content:flex-end;gap:7px;flex-wrap:wrap}.icon-button,.settings-button,.page-link{
       border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--accent);font:inherit;font-size:12px;
-      font-weight:700;padding:7px 10px;cursor:pointer}.icon-button:hover,.settings-button:hover{border-color:var(--accent)}
+      font-weight:700;padding:7px 10px;cursor:pointer}.page-link{text-decoration:none}.icon-button:hover,.settings-button:hover,.page-link:hover{border-color:var(--accent)}
     .device{display:flex;align-items:center;gap:8px;white-space:nowrap;border:1px solid var(--line);border-radius:999px;
       padding:8px 12px;color:var(--muted);font-size:13px;background:var(--card)}.device i{width:8px;height:8px;border-radius:50%;
       background:var(--ok);box-shadow:0 0 12px var(--ok)}.device.busy i,.device.offline i{background:var(--warn);box-shadow:0 0 12px var(--warn)}
@@ -74,7 +74,7 @@
         <p id="current-device" class="device-address">当前设备：尚未选择</p></div>
       <div class="hero-tools">
         <div id="device-state" class="device offline" title="巴法云主题在线状态" aria-live="polite"><i></i><span id="status">尚未配置设备</span></div>
-        <div class="page-links"><button id="settings-toggle" class="settings-button" type="button" aria-expanded="false">设备配置</button>
+        <div class="page-links"><a class="page-link" href="/firmware/">固件下载</a><button id="settings-toggle" class="settings-button" type="button" aria-expanded="false">设备配置</button>
           <button id="theme-toggle" class="icon-button" type="button" aria-label="切换明暗主题">☀ 切换明色</button></div>
       </div>
     </header>
