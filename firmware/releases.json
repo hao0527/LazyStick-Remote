@@ -2,6 +2,15 @@
     "schema":  1,
     "releases":  [
                      {
+                         "tag":  "v0.1.0-ota-prototype-r5",
+                         "name":  "LazyStick 0.1.0 OTA Prototype r5",
+                         "asset":  "LazyStick-0.1.0-ota-prototype-r5.ota.bin",
+                         "url":  "https://lazystick.icu/firmware/LazyStick-0.1.0-ota-prototype-r5.ota.bin",
+                         "size":  1380864,
+                         "sha256":  "da140521ed48f8ad0d7dd97d81798a4ec677d5d0a6e817d56eb91ce6bd1adf3a",
+                         "published_at":  "2026-09-14T13:39:42Z"
+                     },
+                     {
                          "tag":  "v0.1.0-ota-prototype-r4",
                          "name":  "LazyStick 0.1.0 OTA Prototype r4",
                          "asset":  "LazyStick-0.1.0-ota-prototype-r4.ota.bin",
