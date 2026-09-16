@@ -18,15 +18,6 @@
                          "size":  1380864,
                          "sha256":  "da140521ed48f8ad0d7dd97d81798a4ec677d5d0a6e817d56eb91ce6bd1adf3a",
                          "published_at":  "2026-09-14T13:39:42Z"
-                     },
-                     {
-                         "tag":  "v0.1.0-ota-prototype-r4",
-                         "name":  "LazyStick 0.1.0 OTA Prototype r4",
-                         "asset":  "LazyStick-0.1.0-ota-prototype-r4.ota.bin",
-                         "url":  "https://lazystick.icu/firmware/LazyStick-0.1.0-ota-prototype-r4.ota.bin",
-                         "size":  1380864,
-                         "sha256":  "72470a00290edca49ab0903818ca8ba66138fafc1cf59de1824d8160c2a57b07",
-                         "published_at":  "2026-09-13T08:03:13Z"
                      }
                  ]
 }

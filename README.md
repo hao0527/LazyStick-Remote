@@ -6,6 +6,13 @@
 GitHub Release 中，由 `LazyStick_v2/scripts/publish-firmware.ps1` 核验加密包头、大小和
 SHA-256 后同步；不要手工替换同名固件。
 
+当前提供以下加密 OTA 固件，在设备的固件升级页粘贴下载地址即可：
+
+- [0.2.0-treeow-beta.1](https://lazystick.icu/firmware/LazyStick-0.2.0-treeow-beta.1.ota.bin)：包含 Treeow K2 设备发现和六个控制动作，默认停用，需在设备配置页启用；修复 OTA 等待云端动作退出过早超时的问题。本版本已通过主机测试和编译，尚未完成 ESP32 + K2 实机验证。
+- [0.1.0-ota-prototype-r5](https://lazystick.icu/firmware/LazyStick-0.1.0-ota-prototype-r5.ota.bin)：保留的此前版本。
+
+r4 已从发行列表和下载镜像移除。版本元数据和 SHA-256 见 [固件清单](firmware/releases.json)。远程控制页当前提供下文列出的电脑、媒体和宏按钮；Treeow 可通过设备局域网控制页或米家模式 5 配对风速控制。
+
 直接双击 `index.html`，使用现代版 Chrome、Edge、Firefox 或 Safari 打开即可。不需要安装软件或启动本地服务器，也不要求与 LazyStick 位于同一局域网。
 
 首次打开时填写：
