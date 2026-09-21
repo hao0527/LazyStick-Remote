@@ -2,6 +2,15 @@
     "schema":  1,
     "releases":  [
                      {
+                         "tag":  "v0.3.1",
+                         "name":  "LazyStick 0.3.1 树新风版",
+                         "asset":  "LazyStick-0.3.1.ota.bin",
+                         "url":  "https://lazystick.icu/firmware/LazyStick-0.3.1.ota.bin",
+                         "size":  1380864,
+                         "sha256":  "b0cf79c0d8618d6d240f1d0dc0207290348f05d1943a21fae342ba0c9f114b9e",
+                         "published_at":  "2026-09-21T12:36:02Z"
+                     },
+                     {
                          "tag":  "v0.3.0",
                          "name":  "LazyStick 0.3.0 标准版",
                          "asset":  "LazyStick-0.3.0.ota.bin",
