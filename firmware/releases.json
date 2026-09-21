@@ -2,6 +2,15 @@
     "schema":  1,
     "releases":  [
                      {
+                         "tag":  "v0.3.0",
+                         "name":  "LazyStick 0.3.0 标准版",
+                         "asset":  "LazyStick-0.3.0.ota.bin",
+                         "url":  "https://lazystick.icu/firmware/LazyStick-0.3.0.ota.bin",
+                         "size":  1380864,
+                         "sha256":  "526c55185c86b901fa315f39a83eeb22302e65049835cf40700f6fbc59b0ff19",
+                         "published_at":  "2026-09-21T12:34:10Z"
+                     },
+                     {
                          "tag":  "v0.2.0-treeow-beta.1",
                          "name":  "LazyStick 0.2.0 Treeow Beta 1",
                          "asset":  "LazyStick-0.2.0-treeow-beta.1.ota.bin",
