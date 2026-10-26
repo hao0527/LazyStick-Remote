@@ -106,7 +106,6 @@
       <button class="action" type="button" data-label="电脑开机 / 唤醒" data-payloads="on#1"><span>电脑开机 / 唤醒</span><small>点击执行</small></button>
       <button class="action" type="button" data-label="电脑休眠" data-payloads="on#2"><span>电脑休眠</span><small>点击执行</small></button>
       <button class="action danger" type="button" data-label="电脑关机" data-payloads="on#3" data-confirm="将向电脑发送关机指令，请先保存工作。确定继续吗？"><span>电脑关机</span><small>点击执行</small></button>
-      <button class="action warning" type="button" data-label="进入设置模式" data-payloads="on#4" data-confirm="设备会重启并离线，之后必须在设备附近连接其配网热点。确定继续吗？"><span>进入设置模式</span><small>点击执行</small></button>
     </div></section>
 
     <section class="group"><div class="group-head"><h2>媒体</h2><p>音量与播放控制</p></div><div class="grid">
@@ -127,9 +126,17 @@
       <button class="action" type="button" data-label="宏 6" data-payloads="on#7|on#x#xx#5"><span>宏 6</span><small>点击执行</small></button>
     </div></section>
 
+    <section class="group"><div class="group-head"><h2>华为台灯</h2><p>欧普智能台灯 2S · 需先在设备设置中导入授权并启用</p></div><div class="grid">
+      <button class="action" type="button" data-label="台灯开灯" data-payloads="on#4|on#x#xx#0"><span>台灯开灯</span><small>点击执行</small></button>
+      <button class="action" type="button" data-label="台灯关灯" data-payloads="on#4|on#x#xx#1"><span>台灯关灯</span><small>点击执行</small></button>
+      <button class="action" type="button" data-label="阅读模式" data-payloads="on#4|on#x#xx#2"><span>阅读模式</span><small>点击执行</small></button>
+      <button class="action" type="button" data-label="放松模式" data-payloads="on#4|on#x#xx#3"><span>放松模式</span><small>点击执行</small></button>
+      <button class="action" type="button" data-label="侧灯模式（屏阅）" data-payloads="on#4|on#x#xx#4"><span>侧灯模式（屏阅）</span><small>点击执行</small></button>
+    </div></section>
+
     <aside class="privacy"><strong>工作方式：</strong>此页面通过巴法云官方 HTTPS 接口发送指令并查询主题订阅状态，
       不会连接 LazyStick 的局域网地址，也不会占用或挤掉设备的 MQTT 长连接。“设备在线”表示该主题存在在线订阅；
-      “发送成功”只表示巴法云接受了消息，不代表电脑已经执行完成。</aside>
+      “发送成功”只表示巴法云接受了消息，不代表电脑或台灯已经执行完成。</aside>
   </main>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 

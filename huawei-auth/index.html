@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#070b14">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="referrer" content="no-referrer">
+  <meta name="description" content="为 LazyStick 导出华为台灯授权文件。">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' http://127.0.0.1:*; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>华为台灯授权 · LazyStick</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <div><span class="eyebrow">LAZYSTICK TOOLS</span><h1>华为台灯授权</h1><p class="subtitle">登录、选择台灯，下载用于 LazyStick 的授权文件。</p></div>
+      <button id="theme-toggle" class="icon-button" type="button" aria-label="切换明暗主题">☀ 切换明色</button>
+    </header>
+    <section class="card" aria-labelledby="helper-title">
+      <div class="section-head"><span class="step">01</span><div><h2 id="helper-title">连接本机助手</h2><p id="connection-state">首次使用，请在 Windows 电脑下载并运行助手。</p></div><span id="connection-badge" class="badge">未连接</span></div>
+      <div id="helper-setup">
+        <ol class="instructions"><li>下载并解压，双击 <strong>LazyStick-Huawei-Auth.exe</strong>。</li><li>助手会自动打开此页面，连接后即可登录。</li></ol>
+        <div class="actions"><a class="primary" href="https://lazystick.icu/huawei-auth/downloads/LazyStick-Huawei-Auth-windows-x64.zip" download>下载 Windows 助手</a><button id="retry" class="secondary" type="button" hidden>重新连接</button></div>
+        <p class="hint">Windows 10 / 11，64 位；无需安装 Python。手机浏览器无法连接电脑上的助手。</p>
+      </div>
+      <div id="helper-connected" class="actions" hidden><button id="disconnect" class="secondary" type="button">断开并退出助手</button></div>
+    </section>
+    <section id="login-card" class="card" aria-labelledby="login-title">
+      <div class="section-head"><span class="step">02</span><div><h2 id="login-title">登录华为账号</h2><p>使用已绑定台灯的账号，仅支持中国大陆服务。</p></div></div>
+      <form id="login-form">
+        <fieldset id="login-fields" disabled>
+          <div class="form-grid"><div class="field"><label for="account">华为账号</label><input id="account" type="text" required maxlength="256" autocomplete="off" spellcheck="false" placeholder="手机号或邮箱"></div>
+            <div class="field"><label for="password">密码</label><input id="password" type="password" required maxlength="1024" autocomplete="off" placeholder="华为账号密码"></div></div>
+          <div class="actions"><button id="login" class="primary" type="submit">登录</button></div>
+        </fieldset>
+      </form>
+      <div id="challenge-panel" hidden>
+        <div class="field"><label for="channel">验证方式</label><div class="inline"><select id="channel"></select><button id="send-code" class="secondary" type="button">获取验证码</button></div></div>
+        <form id="verify-form" hidden><div class="field"><label for="code">验证码 / 设备挑战码</label><div class="inline"><input id="code" type="text" required maxlength="32" autocomplete="one-time-code" placeholder="输入收到的验证码"><button class="primary" type="submit">验证</button></div></div></form>
+        <button id="restart-login" class="text-button" type="button">重新登录</button>
+      </div>
+      <div id="signed-in" hidden><p class="success">账号已登录</p><button id="logout" class="secondary" type="button">更换账号</button></div>
+    </section>
+    <section id="device-card" class="card" aria-labelledby="device-title">
+      <div class="section-head"><span class="step">03</span><div><h2 id="device-title">选择台灯并下载</h2><p>仅显示支持的欧普智能台灯 2S。</p></div></div>
+      <fieldset id="device-fields" disabled>
+        <div class="field"><label for="device">台灯</label><select id="device"><option value="">请先登录</option></select></div>
+        <div class="actions"><button id="download" class="primary" type="button" disabled>下载授权 JSON</button><button id="refresh-devices" class="secondary" type="button">刷新设备</button></div>
+      </fieldset>
+      <p id="empty-devices" class="hint" hidden>未找到支持的台灯，请确认已在当前账号的华为智慧生活 App 中绑定。</p>
+      <p class="hint">下载后，在 LazyStick 设置页的“华为台灯”中导入并启用。</p>
+    </section>
+    <p id="status" class="status" role="status" aria-live="polite" hidden></p>
+    <aside class="notice">这是 LazyStick 的独立授权工具。账号、密码和验证码由本机助手直接发送给华为，站点不接收、不保存。授权仅在内存中保留，闲置 15 分钟后清除；下载的 JSON 含授权凭据，请妥善保管。</aside>
+    <footer><a href="https://lazystick.icu/huawei-auth/downloads/LazyStick-Huawei-Auth-source.zip" download>助手源码与构建说明</a><span> · </span><a href="https://lazystick.icu/huawei-auth/helper/vendor/huawei_smarthome/LICENSE">GPL-3.0</a></footer>
+  </main>
+</body>
+</html>

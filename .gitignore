@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.auth-build/
+*.spec
+.venv/
+.local/
+lamp-esp32-session.json

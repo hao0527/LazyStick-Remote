@@ -1,0 +1,15 @@
+{
+  "version": "1.0.0",
+  "artifacts": [
+    {
+      "file": "LazyStick-Huawei-Auth-windows-x64.zip",
+      "size": 14053865,
+      "sha256": "4d0747e3468f98f0ea466145c692d5cd011da2d59245866a1281e116912c9fef"
+    },
+    {
+      "file": "LazyStick-Huawei-Auth-source.zip",
+      "size": 71235,
+      "sha256": "755155c1e440aa6ed952a936f4f7bf136938f6eea637fbffb5c1260b998df37e"
+    }
+  ]
+}
