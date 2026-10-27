@@ -8,10 +8,10 @@ SHA-256 后同步；不要手工替换同名固件。
 
 当前提供以下加密 OTA 固件，在设备的固件升级页粘贴下载地址即可：
 
-- [0.3.0 标准版](https://lazystick.icu/firmware/LazyStick-0.3.0.ota.bin)：电脑、媒体、宏及定时控制，不包含树新风控制。
-- [0.3.1 树新风版](https://lazystick.icu/firmware/LazyStick-0.3.1.ota.bin)：在标准功能基础上包含 Treeow K2 设备发现和六个控制动作，需在设备配置页启用。
+- [0.4.0 标准版](https://lazystick.icu/firmware/LazyStick-0.4.0.ota.bin)：电脑、媒体、宏、定时和华为台灯控制，不包含树新风控制。
+- [0.4.1 树新风版](https://lazystick.icu/firmware/LazyStick-0.4.1.ota.bin)：包含标准版全部功能，并提供 Treeow K2 设备发现和六个控制动作，需在设备配置页启用。
 
-两个版本的联网与配网热点 Wi-Fi 最大发射功率均为 5 dBm。此前版本已从 GitHub Releases、发行列表和下载镜像移除。版本元数据和 SHA-256 见 [固件清单](firmware/releases.json)。远程控制页提供下文列出的电脑、媒体和宏按钮；树新风可通过设备局域网控制页或米家模式 5 配对风速控制。
+两个版本的联网与配网热点 Wi-Fi 最大发射功率均为 5 dBm。0.4 系列新增华为台灯授权导入和五个动作，并优化连接复用：实测普通控制约 1.2～1.5 秒，首次连接约 4 秒。0.3.0/0.3.1 保留为历史版本。版本元数据和 SHA-256 见 [固件清单](firmware/releases.json)。树新风可通过设备局域网控制页或米家模式 5 配对风速控制。
 
 直接双击 `index.html`，使用现代版 Chrome、Edge、Firefox 或 Safari 打开即可。不需要安装软件或启动本地服务器，也不要求与 LazyStick 位于同一局域网。
 
